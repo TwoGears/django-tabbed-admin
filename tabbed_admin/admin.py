@@ -130,10 +130,11 @@ class TabbedModelAdmin(ModelAdmin):
             change_view = super(TabbedModelAdmin, self)\
                 .change_view(request, object_id, extra_context=extra_context)
         if hasattr(change_view, 'context_data'):
-            change_view.context_data.update(
-                {'tabs': self.get_formatted_tabs(request,
-                 change_view.context_data['original'])}
-            )
+            original = change_view.context_data.get('original', None)
+            if original:
+                change_view.context_data.update(
+                    {'tabs': self.get_formatted_tabs(request, original)}
+                )
         return change_view
 
     @property
